@@ -3,7 +3,10 @@
     "target": "ES6",
     "module": "ES2022",
     "outDir": "./out",
-    "strict": true
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "moduleResolution": "node"
   },
   "include": ["./src/**/*.ts"]
 }
