@@ -63,6 +63,12 @@ function dataAnalysis() {
 
 //TODO
 //k clustering algorithm
+function kMeans(data: number[][], k: number): number[][][] {
+  //todo
+
+  let clusters: number[][][] = Array.from({ length: k }, () => []);
+  return clusters;
+}
 
 //initialization of centroids
 
