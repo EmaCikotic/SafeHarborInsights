@@ -7,7 +7,7 @@ interface CrimeRecord {
 }
 
 //saving a dataset in variabe so it can be used  later
-const datasetPath = "./data/Crime_Data_from_2020_to_Present_reduced.csv";
+const datasetPath = ".data/Crime_Data_from_2020_to_Present_reduced.csv";
 
 const crimeData: CrimeRecord[] = [];
 
