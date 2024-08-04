@@ -4,7 +4,8 @@ import csv from "csv-parser";
 // Interface to define the structure of each crime record
 interface CrimeRecord {
   area: string;
-  gender: string;
+  area_name: string;
+  victim_sex: string;
 }
 
 // Saving the dataset in a variable for later use
@@ -24,7 +25,6 @@ fs.createReadStream(datasetPath)
   });
 
 function dataAnalysis() {
-  // Fields needed, converted to numerical format for clustering
   const crimeByArea: { [area: string]: number } = {};
   const crimeByAreaAndGender: {
     [area: string]: { male: number; female: number };
@@ -33,7 +33,12 @@ function dataAnalysis() {
   // Process each crime record
   crimeData.forEach((record) => {
     const area = record.area;
-    const gender = record.gender.toLowerCase();
+    const gender = record.victim_sex ? record.victim_sex.toLowerCase() : null;
+
+    if (!gender) {
+      console.warn(`Missing gender data for record:`, record);
+      return; // Skip this record if gender is not available
+    }
 
     // Counting crimes by area
     if (!crimeByArea[area]) {
@@ -45,8 +50,12 @@ function dataAnalysis() {
     if (!crimeByAreaAndGender[area]) {
       crimeByAreaAndGender[area] = { male: 0, female: 0 };
     }
-    if (gender === "male" || gender === "female") {
-      crimeByAreaAndGender[area][gender]++;
+
+    // Increment counts based on the gender value
+    if (gender === "m" || gender === "f") {
+      crimeByAreaAndGender[area][gender === "m" ? "male" : "female"]++;
+    } else {
+      console.warn(`Unknown gender value "${gender}" for record:`, record);
     }
   });
 

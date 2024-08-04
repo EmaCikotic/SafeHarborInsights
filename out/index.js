@@ -1,39 +1,11 @@
-"use strict";
-var __createBinding = (this && this.__createBinding) || (Object.create ? (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    var desc = Object.getOwnPropertyDescriptor(m, k);
-    if (!desc || ("get" in desc ? !m.__esModule : desc.writable || desc.configurable)) {
-      desc = { enumerable: true, get: function() { return m[k]; } };
-    }
-    Object.defineProperty(o, k2, desc);
-}) : (function(o, m, k, k2) {
-    if (k2 === undefined) k2 = k;
-    o[k2] = m[k];
-}));
-var __setModuleDefault = (this && this.__setModuleDefault) || (Object.create ? (function(o, v) {
-    Object.defineProperty(o, "default", { enumerable: true, value: v });
-}) : function(o, v) {
-    o["default"] = v;
-});
-var __importStar = (this && this.__importStar) || function (mod) {
-    if (mod && mod.__esModule) return mod;
-    var result = {};
-    if (mod != null) for (var k in mod) if (k !== "default" && Object.prototype.hasOwnProperty.call(mod, k)) __createBinding(result, mod, k);
-    __setModuleDefault(result, mod);
-    return result;
-};
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
-Object.defineProperty(exports, "__esModule", { value: true });
-const fs = __importStar(require("fs"));
-const csv_parser_1 = __importDefault(require("csv-parser"));
+import * as fs from "fs";
+import csv from "csv-parser";
 // Saving the dataset in a variable for later use
 const datasetPath = "./data/Crime_Data_from_2020_to_Present_reduced.csv";
 const crimeData = [];
 // Read the CSV file
 fs.createReadStream(datasetPath)
-    .pipe((0, csv_parser_1.default)())
+    .pipe(csv())
     .on("data", (row) => {
     crimeData.push(row);
 })
@@ -42,13 +14,16 @@ fs.createReadStream(datasetPath)
     dataAnalysis(); //calling the function after loaded data
 });
 function dataAnalysis() {
-    // Fields needed, converted to numerical format for clustering
     const crimeByArea = {};
     const crimeByAreaAndGender = {};
     // Process each crime record
     crimeData.forEach((record) => {
         const area = record.area;
-        const gender = record.gender.toLowerCase();
+        const gender = record.victim_sex ? record.victim_sex.toLowerCase() : null;
+        if (!gender) {
+            console.warn(`Missing gender data for record:`, record);
+            return; // Skip this record if gender is not available
+        }
         // Counting crimes by area
         if (!crimeByArea[area]) {
             crimeByArea[area] = 0;
@@ -58,8 +33,12 @@ function dataAnalysis() {
         if (!crimeByAreaAndGender[area]) {
             crimeByAreaAndGender[area] = { male: 0, female: 0 };
         }
-        if (gender === "male" || gender === "female") {
-            crimeByAreaAndGender[area][gender]++;
+        // Increment counts based on the gender value
+        if (gender === "m" || gender === "f") {
+            crimeByAreaAndGender[area][gender === "m" ? "male" : "female"]++;
+        }
+        else {
+            console.warn(`Unknown gender value "${gender}" for record:`, record);
         }
     });
     // Converting counts to arrays for clustering
