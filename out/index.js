@@ -50,10 +50,9 @@ function dataAnalysis() {
     ]);
     // Log the counts for verification
     console.log("Crime counts for gender before clustering:", crimeCountsGender);
-    // Calling the k-means clustering
     const k = 3; // Number of clusters
     const genderClusters = kMeans(crimeCountsGender, k);
-    console.log("Generated Gender Clusters (Before Processing):", genderClusters);
+    //console.log("Generated Gender Clusters (Before Processing):", genderClusters);
     // Displaying the results
     console.log("Gender-Based Safety Clusters:");
     genderClusters.forEach((cluster, index) => {
@@ -73,7 +72,7 @@ function dataAnalysis() {
                 areasInCluster.push(areaNames[areaIndex]);
             }
             else {
-                console.log(`  Invalid area index: ${areaIndex}`);
+                console.log(`Invalid area index: ${areaIndex}`);
             }
         });
         // Calculating  averages
@@ -159,7 +158,7 @@ function updateCentroids(clusters, centroids) {
         if (cluster.length === 0)
             return;
         // Initialize a new centroid array with the same number of dimensions as the data points
-        const newCentroid = []; // Start with an empty array
+        const newCentroid = [];
         // Populate the newCentroid array with zeros
         for (let i = 0; i < cluster[0].length - 1; i++) {
             newCentroid[i] = 0; // Initialize each dimension to zero
@@ -170,12 +169,12 @@ function updateCentroids(clusters, centroids) {
                 newCentroid[i] += value; // Sum the values for each dimension
             });
         });
-        // Calculate the average for each dimension by dividing the sum by the number of points in the cluster
+        // Calculating  the average for each dimension
         newCentroid.forEach((sum, i) => {
-            newCentroid[i] = sum / cluster.length; // Update the new centroid with the average
+            newCentroid[i] = sum / cluster.length;
         });
         // Update the centroid for the current cluster
-        centroids[index] = newCentroid; // Set the new centroid in the centroids array
+        centroids[index] = newCentroid;
     });
 }
 // Euclidean distance calculation

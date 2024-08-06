@@ -70,11 +70,10 @@ function dataAnalysis() {
   // Log the counts for verification
   console.log("Crime counts for gender before clustering:", crimeCountsGender);
 
-  // Calling the k-means clustering
   const k = 3; // Number of clusters
   const genderClusters = kMeans(crimeCountsGender, k);
 
-  console.log("Generated Gender Clusters (Before Processing):", genderClusters);
+  //console.log("Generated Gender Clusters (Before Processing):", genderClusters);
 
   // Displaying the results
   console.log("Gender-Based Safety Clusters:");
@@ -100,7 +99,7 @@ function dataAnalysis() {
         totalFemale += femaleCount;
         areasInCluster.push(areaNames[areaIndex]);
       } else {
-        console.log(`  Invalid area index: ${areaIndex}`);
+        console.log(`Invalid area index: ${areaIndex}`);
       }
     });
 
